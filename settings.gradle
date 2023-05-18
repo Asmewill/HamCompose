@@ -1,3 +1,4 @@
 rootProject.name = "HamCompose"
-include ":app"
- 
+include ':hamapp'
+include ':owapp'
+include ':omapp'

@@ -26,7 +26,7 @@ buildscript {
         retrofitVersion = "2.9.0"
         coroutineAdapterVersion = "0.9.2"
         gsonVersion = "2.8.6"
-        blankjToolVersion = "1.23.7"
+        blankjToolVersion = "1.30.6"
         glideVersion = "4.12.0"
         picassoVersion = "2.71828"
         pagingVersion = "3.0.0-beta02"
@@ -51,7 +51,7 @@ buildscript {
     dependencies {
         classpath 'com.android.tools.build:gradle:7.0.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21"
-        classpath "com.google.dagger:hilt-android-gradle-plugin:2.38.1"
+        classpath "com.google.dagger:hilt-android-gradle-plugin:2.38.1"  //使用hilt注入viewmodel
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.3.5"
 
         // NOTE: Do not place your application dependencies here; they belong
