@@ -1,8 +1,8 @@
 package com.example.owapp.http.paging
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.blankj.utilcode.util.LogUtils
 import com.example.owapp.http.HttpResult
 import com.mm.hamcompose.data.bean.BasicBean
 import com.mm.hamcompose.data.bean.ListWrapper
@@ -34,7 +34,7 @@ class BasePagingSource<T: Any> constructor(
                 )
             }
             is HttpResult.Error -> {
-                LogUtils.e("网络请求异常： ${response.exception.message}")
+                Log.e("BasePagingSource","网络请求异常： ${response.exception.message}")
                 LoadResult.Error(response.exception)
             }
         }

@@ -2,7 +2,6 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id "kotlin-android"
-    id "kotlin-kapt"
     id "kotlin-parcelize"//Parcelize
     id "androidx.navigation.safeargs.kotlin"
 }
@@ -56,7 +55,8 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$composeVersion"
-
+    //主题库，必须有
+    implementation "androidx.appcompat:appcompat:$appcompatVersion"
     //约束布局
     implementation "androidx.constraintlayout:constraintlayout-compose:$constraintComposeVersion"
     //compose插件
@@ -90,7 +90,7 @@ dependencies {
     //room数据库
     implementation "androidx.room:room-runtime:$roomVersion"
     implementation "androidx.room:room-ktx:$roomVersion"
-    kapt "androidx.room:room-compiler:$roomVersion"
+    annotationProcessor  "androidx.room:room-compiler:$roomVersion"
     implementation "androidx.room:room-paging:$roomPagingVersion"
 
     //数据保存，用于cookie持久化

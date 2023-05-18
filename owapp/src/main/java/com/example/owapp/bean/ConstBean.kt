@@ -2,7 +2,7 @@ package com.mm.hamcompose.data.bean
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.mm.hamcompose.data.db.DbConst
+
 
 const val MY_USER_ID = -999
 
@@ -18,7 +18,7 @@ data class TabTitle(
     var selected: Boolean = false
 )
 
-@Entity(tableName = DbConst.history)
+
 data class HistoryRecord(
     @PrimaryKey var id: Int,
     var title: String,
