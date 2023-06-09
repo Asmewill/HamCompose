@@ -1,5 +1,6 @@
 package com.example.owapp.http
 
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
@@ -26,7 +27,7 @@ open class BaseRepository {
                          if(response.data!=null){
                              HttpResult.Success(response.data!!)
                          }else{
-                             HttpResult.Error(Exception("data is null"))
+                             HttpResult.Error(Exception("504"))
                          }
                      }else{
                          HttpResult.Error(Exception(response.errorMsg))
@@ -39,23 +40,23 @@ open class BaseRepository {
     }
 
     fun <T:Any> pager(
-        initkey:Int=0,
+        initKey:Int=0,
         baseConfig:PagingConfig=PagingFactory().pagingConfig,
         callAction:suspend (Int)-> BasicBean<ListWrapper<T>>
     ):Flow<PagingData<T>>{
         return Pager(
             config=baseConfig,
-            initialKey = initkey,
+            initialKey = initKey,
             pagingSourceFactory={
                      BasePagingSource(callAction ={ nextPage->
                          try {
-                             HttpResult.Success(callAction(nextPage))
+                          return@BasePagingSource   HttpResult.Success(callAction(nextPage))
                          }catch (e:Exception){
-                            HttpResult.Error(e)
+                          return@BasePagingSource  HttpResult.Error(e)
                          }
                      })
             }
         ).flow
-
     }
+
 }

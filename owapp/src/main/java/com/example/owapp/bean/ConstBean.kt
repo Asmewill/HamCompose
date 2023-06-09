@@ -33,3 +33,14 @@ data class HistoryRecord(
     var chapterName: String,
     var desc: String,
 )
+
+data class PointItem(
+    val userName:String,
+    val score:Int,
+    val rank:Int
+)
+data class SignBean(
+    val pointStr:String,
+    val pointType:String
+)
+

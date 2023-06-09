@@ -31,6 +31,7 @@ fun StructurePage(
     navCtrl: NavHostController,
     viewModel: StructureViewModel = hiltViewModel()
 ) {
+
     viewModel.start()
     val systemData by remember { viewModel.list }
     val isLoading by remember { viewModel.loading }

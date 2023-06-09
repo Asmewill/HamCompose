@@ -11,6 +11,6 @@ class PagingFactory {
         enablePlaceholders = true, //开启占位符
         prefetchDistance=4,         //预刷新的距离，距离最后一个 item 多远时加载数据
         //初始化加载数量，默认为 pageSize * 3
-        initialLoadSize = 20
+        initialLoadSize = 1
     )
 }

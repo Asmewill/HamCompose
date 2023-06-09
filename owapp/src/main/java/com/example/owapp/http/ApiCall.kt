@@ -1,6 +1,11 @@
 package com.example.owapp.http
 
 import android.annotation.SuppressLint
+import android.os.PersistableBundle
+import com.example.owapp.HamApp
+import com.franmontiel.persistentcookiejar.PersistentCookieJar
+import com.franmontiel.persistentcookiejar.cache.SetCookieCache
+import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.mm.hamcompose.data.http.interceptor.CacheCookieInterceptor
 import com.mm.hamcompose.data.http.interceptor.LogInterceptor
@@ -39,19 +44,23 @@ object ApiCall {
             }
             return SERVICE
         }
-
+    //Cookie持久化
+    private val cookieJar:PersistentCookieJar by lazy{
+        PersistentCookieJar(SetCookieCache(),SharedPrefsCookiePersistor(HamApp.mContext))
+    }
     //手动创建一个OkHttpClient并设置超时时间
     val okHttp: OkHttpClient
         get() {
             return OkHttpClient.Builder().run {
+               // cookieJar(cookieJar)
                 connectTimeout(DEFAULT_TIMEOUT.toLong(), TimeUnit.MILLISECONDS)
                 readTimeout(DEFAULT_TIMEOUT.toLong(), TimeUnit.MILLISECONDS)
                 writeTimeout(DEFAULT_TIMEOUT.toLong(), TimeUnit.MILLISECONDS)
                 addInterceptor(SetCookieInterceptor())
                 addInterceptor(CacheCookieInterceptor())
                 addInterceptor(LogInterceptor())
-                //不验证证书
-                sslSocketFactory(createSSLSocketFactory())
+                //不验证证书，可以使用Charles监听数据
+                .sslSocketFactory(createSSLSocketFactory(),TrustAllCerts())
                 hostnameVerifier(TrustAllNameVerifier())
                 build()
             }
