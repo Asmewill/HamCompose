@@ -50,6 +50,7 @@ import com.example.owapp.util.HamToolBar2
 import com.example.owapp.viewmodel.MyCollectViewModel
 import com.google.accompanist.flowlayout.FlowRow
 import com.mm.hamcompose.data.bean.ParentBean
+import com.mm.hamcompose.data.bean.WebData
 
 /**
  * Created by Owen on 2023/5/25
@@ -170,6 +171,10 @@ fun MyCollectPage(navCtrl:NavHostController) {
                                         .background(color = C_Primary)
                                         .combinedClickable(
                                             onClick = {
+                                                navCtrl.currentBackStackEntry?.replaceArguments(Bundle().apply {
+                                                    this.putParcelable(Constant.ARGS,WebData(parentBean.name?:"",parentBean.link?:""))
+                                                })
+                                               navCtrl.navigate(RouteName.WEBVIEW)
 
                                             },
                                             onLongClick = {
@@ -207,7 +212,12 @@ fun MyCollectPage(navCtrl:NavHostController) {
                         .padding(horizontal = 10.dp, vertical = 5.dp)
                         .fillMaxWidth()
                         .height(140.dp)
-                        .background(color = Color.White, shape = RoundedCornerShape(5.dp))){
+                        .background(color = Color.White, shape = RoundedCornerShape(5.dp)).clickable {
+                            navCtrl.currentBackStackEntry?.replaceArguments(Bundle().apply {
+                                this.putParcelable(Constant.ARGS,WebData(article?.title?:"",article?.link?:""))
+                            })
+                            navCtrl.navigate(RouteName.WEBVIEW)
+                        }){
                         Column(modifier= Modifier
                             .fillMaxSize()
                             .padding(20.dp)) {

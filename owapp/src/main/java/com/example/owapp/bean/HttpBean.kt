@@ -121,11 +121,7 @@ data class Hotkey(
     var visible: Int
 )
 
-@Parcelize
-data class WebData(
-    var title: String?,
-    var url: String
-): Parcelable
+
 
 @Entity(tableName = DbConst.userInfo)
 @TypeConverters(IntTypeConverter::class)

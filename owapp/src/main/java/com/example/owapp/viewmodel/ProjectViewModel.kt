@@ -27,13 +27,16 @@ class ProjectViewModel:BaseViewModel() {
 //    ))
     val projectLiveData = MutableLiveData<MutableList<ParentBean>>()
     val projectItemListLiveData = MutableLiveData<Flow<PagingData<Article>>>()
-
+    val tabIndex = mutableStateOf(0)
     fun getProjectTabList(){
         async {
             HttpRepository.getProjectCategory().collectLatest {
                 when(it){
                     is HttpResult.Success ->{
                        it.result?.let { list->
+                           if(!list[0].name.equals("最新")){
+                               list.add(0, ParentBean(null,id=-1, name = "最新"))//手动添加一个最新Item
+                           }
                            projectLiveData.value=list
                            if(list.size>0){
                                getProjectItemList(list[0].id)

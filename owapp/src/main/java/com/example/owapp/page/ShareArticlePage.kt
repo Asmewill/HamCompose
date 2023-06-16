@@ -67,7 +67,7 @@ fun ShareArticlePage(navCtrl:NavHostController){
     Column(
         Modifier
             .fillMaxSize()
-            .padding(start = 25.dp, end = 25.dp)) {
+            .padding(start = 25.dp, top = 25.dp, end = 25.dp)) {
         Row(modifier=Modifier.padding(top=25.dp), verticalAlignment = Alignment.CenterVertically) {
             Text(text = "标题", fontSize = 14.sp)
             TextField(

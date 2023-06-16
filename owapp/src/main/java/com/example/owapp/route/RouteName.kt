@@ -21,4 +21,8 @@ object RouteName {
     const val ADD_COLLECT="add_collect"
     const val EDIT_COLLECT="edit_collect"
     const val SHARE_ARTICLE="share_article"
+    const val STRUCTURE_LIST="structure_list"
+    const val WECHAT_DETAIL="wechat_detail"
+    const val WECHAT_SEARCH="wechat_search"
+    const val HISTORY_RECORD="history_record"
 }

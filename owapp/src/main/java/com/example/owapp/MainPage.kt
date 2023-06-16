@@ -1,6 +1,9 @@
 package com.example.owapp.util
 
 import android.annotation.SuppressLint
+import android.os.Parcel
+import android.os.Parcelable
+import android.text.TextUtils
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -11,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraph.Companion.findStartDestination
 
@@ -21,6 +25,7 @@ import com.example.owapp.page.*
 import com.example.owapp.route.BottomNavRoute
 import com.example.owapp.route.RouteName
 import com.mm.hamcompose.data.bean.ParentBean
+import com.mm.hamcompose.data.bean.WebData
 
 /**
  *
@@ -33,28 +38,34 @@ import com.mm.hamcompose.data.bean.ParentBean
  *
  * Created by Owen on 2023/5/18
  */
-//val bottomNavRoute = mutableStateOf<BottomNavRoute>(BottomNavRoute.Home)
 @Composable
 fun MainPage(
     navCtrl: NavHostController = rememberNavController(),
     onFinish: () -> Unit
 ) {
-    var homeIndex by remember { mutableStateOf(0) }
+   // var homeIndex by remember { mutableStateOf(0) }
     //返回back堆栈的顶部条目
     val navBackStackEntry by navCtrl.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route ?: RouteName.HOME
+    var index by remember {
+        mutableStateOf(BottomNavRoute.Home.mipId)
+    }
     if (isMainScreen(currentRoute)) {
         Scaffold(
             //这里可以使用公共的topBar防止出现页面切换闪烁问题
             content = {
-                NavHostTab(navCtrl, homeIndex, onFinish, it)
+                NavHostTab(navCtrl, onFinish, it)
             },
             bottomBar = {
-                BottomNavBar(navCtrl, BottomNavRoute.Home)
+                BottomNavBar(navCtrl,
+                    index,
+                    onItemSelect = {
+                        index=it
+                })
             }
         )
     } else {
-        NavHostTab(navCtrl, homeIndex, onFinish)
+        NavHostTab(navCtrl, onFinish)
     }
 
 }
@@ -62,11 +73,13 @@ fun MainPage(
 @Composable
 fun NavHostTab(
     navCtrl: NavHostController,
-    homeIndex: Int,
     onFinish: () -> Unit,
     paddingValues: PaddingValues = PaddingValues(0.dp),
 ) {
-    var homeIndex1 = homeIndex
+    var homeIndex by remember {
+        mutableStateOf(0)
+    }
+    var categoryIndex  by remember { mutableStateOf(0)}
     NavHost(
         navController = navCtrl,
         startDestination = RouteName.MAIN,
@@ -77,8 +90,8 @@ fun NavHostTab(
                 startDestination = RouteName.HOME
             ) {
                 composable(RouteName.HOME) {
-                    HomePage(navCtrl, homeIndex = homeIndex1) {
-                        homeIndex1 = it
+                    HomePage(navCtrl, homeIndex = homeIndex) {
+                        homeIndex = it
                     }
                     //点击两次返回才关闭app
                     BackHandler {
@@ -86,7 +99,9 @@ fun NavHostTab(
                     }
                 }
                 composable(RouteName.CATEGORY) {
-                    CategoryPage(navCtrl = navCtrl)
+                    CategoryPage(navCtrl = navCtrl, indexPage = categoryIndex, onPageSelected = {
+                        categoryIndex=it
+                    })
                     //点击两次返回才关闭app
                     BackHandler {
                         TwoBackFinish.execute(onFinish)
@@ -107,104 +122,12 @@ fun NavHostTab(
                     }
                 }
             }
-//            //登录
-//            composable(RouteName.LOGIN) {
-//                LoginPage(navCtrl)
-//                BackHandler {
-//                    navCtrl.navigateUp()
-//                }
-//            }
-//            //注册
-//            composable(RouteName.REGISTER) {
-//                RegisterPage(navCtrl)
-//                BackHandler {
-//                    navCtrl.navigateUp()
-//                }
-//            }
-//            //积分排行
-//            composable(RouteName.POINTRANKING) {
-//                PointRankingPage(navCtrl)
-//                BackHandler {
-//                    navCtrl.navigateUp()
-//                }
-//            }
-//            //我的收藏
-//            composable(RouteName.MY_COLLECT) {
-//                MyCollectPage(navCtrl)
-//                BackHandler {
-//                    navCtrl.navigateUp()
-//                }
-//            }
-//            //我的文章
-//            composable(RouteName.MY_ARTICLE) {
-//                MyArticlePage(navCtrl)
-//                BackHandler {
-//                    navCtrl.navigateUp()
-//                }
-//            }
-//            //WebView
-//            composable(
-//                route=RouteName.WEBVIEW+"?url={url}&title={title}",
-//                arguments= listOf(
-//                     navArgument("url"){ defaultValue=""},
-//                     navArgument("title"){defaultValue=""}
-//                )
-//            ) {
-//                WebViewPage(navCtrl,it.arguments?.getString("title")?:"",it.arguments?.getString("url")?:"")
-//                BackHandler {
-//                    navCtrl.navigateUp()
-//                }
-//            }
-//            //系统设置
-//            composable(RouteName.SETTINGS) {
-//                SettingsPage(navCtrl)
-//                BackHandler {
-//                    navCtrl.navigateUp()
-//                }
-//            }
-//            //搜索文章
-//            composable(RouteName.ARTICLE_SEARCH) {
-//                ArticleSearchPage(navCtrl)
-//                BackHandler {
-//                    navCtrl.navigateUp()
-//                }
-//            }
-//            //添加收藏
-//            composable(RouteName.ADD_COLLECT) {
-//                AddCollectPage(navCtrl)
-//                BackHandler {
-//                    navCtrl.navigateUp()
-//                }
-//            }
-//            //编辑收藏
-//            composable(RouteName.EDIT_COLLECT){
-//                val args= navCtrl.previousBackStackEntry?.arguments?.getParcelable(Constant.ARGS) as ParentBean?
-//                EditCollectPage(navCtrl = navCtrl, itemBean = args!!)
-//                BackHandler {
-//                    navCtrl.navigateUp()
-//                }
-//           }
-//           // 添加分享文章
-//            composable(RouteName.SHARE_ARTICLE){
-//                ShareArticlePage(navCtrl)
-//                BackHandler {
-//                    navCtrl.navigateUp()
-//                }
-//            }
-//          //学习 ---- 现在最多只能容纳11+1个主界面 12个页面，超出就报错了
-//            composable(RouteName.STUDY) {
-//                StudyPage(navCtrl)
-//                BackHandler {
-//                    navCtrl.navigateUp()
-//                }
-//            }
             //登录
             composable(RouteName.LOGIN) {
                 LoginPage(navCtrl)
                 BackHandler {
                     navCtrl.navigateUp()
                 }
-
             }
             //注册
             composable(RouteName.REGISTER) {
@@ -212,99 +135,134 @@ fun NavHostTab(
                 BackHandler {
                     navCtrl.navigateUp()
                 }
-
             }
+            //积分排行
             composable(RouteName.POINTRANKING) {
                 PointRankingPage(navCtrl)
                 BackHandler {
                     navCtrl.navigateUp()
                 }
             }
+            //我的收藏
             composable(RouteName.MY_COLLECT) {
                 MyCollectPage(navCtrl)
                 BackHandler {
                     navCtrl.navigateUp()
                 }
             }
+            //我的文章
             composable(RouteName.MY_ARTICLE) {
                 MyArticlePage(navCtrl)
                 BackHandler {
                     navCtrl.navigateUp()
                 }
             }
+            //WebView
             composable(
-                route = RouteName.WEBVIEW + "?url={url}&title={title}",
-                arguments = listOf(
-                    navArgument("url") { defaultValue = "" },
-                    navArgument("title") { defaultValue = "" })
-            ) {
-                WebViewPage(
-                    navCtrl,
-                    it.arguments?.getString("title") ?: "",
-                    it.arguments?.getString("url") ?: ""
+                route=RouteName.WEBVIEW+"?url={url}&title={title}",
+                arguments= listOf(
+                     navArgument("url"){ defaultValue=""},
+                     navArgument("title"){defaultValue=""}
                 )
+            ) {
+                val title=it.arguments?.getString("title")?:""
+                val url =it.arguments?.getString("url")?:""
+                val parcelable= navCtrl.previousBackStackEntry?.arguments?.getParcelable<Parcelable>(Constant.ARGS)
+                if(!TextUtils.isEmpty(title)&&!TextUtils.isEmpty(url)){
+                    WebViewPage(navCtrl, title = title,url=url)
+                }else{
+                    if(parcelable!=null&&parcelable is WebData){
+                        WebViewPage(navCtrl, webData = parcelable)
+                    }
+                }
                 BackHandler {
                     navCtrl.navigateUp()
                 }
-
             }
+            //系统设置
             composable(RouteName.SETTINGS) {
                 SettingsPage(navCtrl)
                 BackHandler {
                     navCtrl.navigateUp()
                 }
             }
+            //搜索文章
             composable(RouteName.ARTICLE_SEARCH) {
                 ArticleSearchPage(navCtrl)
                 BackHandler {
                     navCtrl.navigateUp()
                 }
-
             }
+            //添加收藏
             composable(RouteName.ADD_COLLECT) {
                 AddCollectPage(navCtrl)
                 BackHandler {
                     navCtrl.navigateUp()
                 }
-
             }
-            composable(RouteName.EDIT_COLLECT) {
-                val args =
-                    navCtrl.previousBackStackEntry?.arguments?.getParcelable(Constant.ARGS) as ParentBean?
-                EditCollectPage(navCtrl = navCtrl, itemBean = args!!)
+            //编辑收藏
+            composable(RouteName.EDIT_COLLECT){
+                val parcelable= navCtrl.previousBackStackEntry?.arguments?.getParcelable<Parcelable>(Constant.ARGS)
+                if(parcelable!=null&&parcelable is ParentBean){
+                    EditCollectPage(navCtrl = navCtrl, itemBean = parcelable)
+                }
                 BackHandler {
                     navCtrl.navigateUp()
                 }
-
             }
-            composable(RouteName.SHARE_ARTICLE) {
+           // 添加分享文章
+            composable(RouteName.SHARE_ARTICLE){
                 ShareArticlePage(navCtrl)
                 BackHandler {
                     navCtrl.navigateUp()
                 }
-
             }
+           //学习 ---- 现在最多只能容纳11+1个主界面 12个页面，超出就报错了
             composable(RouteName.STUDY) {
                 StudyPage(navCtrl)
                 BackHandler {
                     navCtrl.navigateUp()
                 }
-
             }
-            composable("13") {
-
+            composable(RouteName.STRUCTURE_LIST) {
+               val parcelable= navCtrl.previousBackStackEntry?.arguments?.getParcelable<Parcelable>(Constant.ARGS)
+                if(parcelable!=null&&parcelable is ParentBean){
+                    StructureListPage(navCtrl,parcelable)
+                }
+                BackHandler {
+                    navCtrl.navigateUp()
+                }
             }
-            composable("14") {
-
+            //可以多加一个空的，防止:NavHost报错： java.lang.ArrayIndexOutOfBoundsException: length=13; index=13
+            composable(RouteName.WECHAT_DETAIL) {
+                val parcelable=navCtrl.previousBackStackEntry?.arguments?.getParcelable<Parcelable>(Constant.ARGS)
+                if(parcelable!=null&&parcelable is ParentBean){
+                    WechatDetailPage(navCtrl = navCtrl,parcelable)
+                }
+                BackHandler {
+                    navCtrl.navigateUp()
+                }
             }
-            composable("15") {
-
+            composable(RouteName.WECHAT_SEARCH) {
+                val parcelable=navCtrl.previousBackStackEntry?.arguments?.getParcelable<Parcelable>(Constant.ARGS)
+                if(parcelable!=null&&parcelable is ParentBean){
+                    WechatSearchPage(navCtrl =navCtrl,parcelable)
+                }
+                BackHandler {
+                    navCtrl.navigateUp()
+                }
             }
-            composable("16") {
-
+            composable(RouteName.HISTORY_RECORD) {
+                HistoryPage(navCtrl)
+                BackHandler {
+                    navCtrl.navigateUp()
+                }
             }
             composable("17") {
-
+            }
+            composable("18") {
+            }
+            composable("19") {
             }
         })
 }
@@ -326,17 +284,16 @@ val items = listOf(
 @Composable
 fun BottomNavBar(
     navCtrl: NavHostController,
-    itemSelect: BottomNavRoute
+    selectIndex:Int,
+    onItemSelect:(Int)->Unit={}
 ) {
-    var index by remember {
-        mutableStateOf(itemSelect.mipId)
-    }
+
     BottomNavigation(backgroundColor = Color.White) {
         items.forEach { item ->
-            val isSelect = index == item.mipId
+            val isSelected = selectIndex == item.mipId
             BottomNavigationItem(
-                selected = isSelect, onClick = {
-                    index = item.mipId
+                selected = isSelected, onClick = {
+                    onItemSelect(item.mipId)
                     navCtrl.navigate(item.routeName) {
                         popUpTo(navCtrl.graph.findStartDestination().id) {
                             saveState = true

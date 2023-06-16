@@ -5,6 +5,7 @@ import android.text.TextUtils
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -12,6 +13,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.TextUnit
@@ -156,11 +158,12 @@ fun  TabAddWebSite(titleValue:String, urlValue:String,viewModel:AddCollectViewMo
             .fillMaxSize()
             .padding(start = 25.dp, end = 25.dp)) {
         Row(modifier=Modifier.padding(top=25.dp), verticalAlignment = Alignment.CenterVertically) {
-           Text(text = "标题", fontSize = 14.sp)
+            Text(text = "标题", fontSize = 14.sp)
+            //TextField必须是>=50dp,否则容易导致输入文字无法正常显示
             TextField(
                 modifier= Modifier
-                    .fillMaxWidth()
-                    .padding(top = 5.dp),
+                    .fillMaxWidth().height(50.dp).clip(shape = RoundedCornerShape(25.dp)).background(color=Color.White)
+                ,
                 value =titleValue , onValueChange ={
                     viewModel.title.value=it
                 },

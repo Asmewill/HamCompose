@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id "kotlin-android"
+    id 'kotlin-kapt'
     id "kotlin-parcelize"//Parcelize
     id "androidx.navigation.safeargs.kotlin"
 }
@@ -16,6 +17,18 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary true
+        }
+        //room
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += [
+                        //配置并启用将数据库架构导出到给定目录中的json文件的功能
+                        "room.schemaLocation"  : "$projectDir/schemas".toString(),
+                        //启用gradle增量注解处理器
+                        "room.incremental"     : "true",
+                        //配置room以重写查询，使其顶部星形投影在展开后包含DAO方法返回类型中定义的列
+                        "room.expandProjection": "true"]
+            }
         }
     }
 
@@ -89,7 +102,7 @@ dependencies {
     //room数据库
     implementation "androidx.room:room-runtime:$roomVersion"
     implementation "androidx.room:room-ktx:$roomVersion"
-    annotationProcessor  "androidx.room:room-compiler:$roomVersion"
+     kapt   "androidx.room:room-compiler:$roomVersion"
     implementation "androidx.room:room-paging:$roomPagingVersion"
 
     //数据保存，用于cookie持久化

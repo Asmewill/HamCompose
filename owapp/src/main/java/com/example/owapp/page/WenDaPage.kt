@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,6 +31,7 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
  */
 @Composable
 fun WenDaPage(navCtrl: NavHostController) {
+    val mContext = LocalContext.current
     val wenDaViewModel: WenDaViewModel = viewModel()
     if (!wenDaViewModel.isInit) {
         wenDaViewModel.getWendaList()
@@ -42,54 +44,6 @@ fun WenDaPage(navCtrl: NavHostController) {
         wenDaViewModel.getWendaList()
     }) {
 
-//        LazyColumn(Modifier.fillMaxSize()) {
-//            if(wenDaList!=null&&wenDaList.itemCount>0){
-//                itemsIndexed(wenDaList){index,item->
-//                    Card(modifier = Modifier
-//                            .padding(horizontal = 10.dp, vertical = 5.dp)
-//                            .background(Color.White)
-//                            .clickable {
-//                                navCtrl.navigate(RouteName.WEBVIEW + "?url=${item?.link}&title=${item?.title}")
-//                            }) {
-//                            Column(Modifier.padding(20.dp).fillMaxSize()) {
-//                                Text(
-//                                    text = item?.title?:"",
-//                                    color = Color.Black,
-//                                    fontSize = 20.sp,
-//                                    maxLines = 2,
-//                                    overflow = TextOverflow.Ellipsis
-//                                )
-//                                Row(horizontalArrangement = Arrangement.Center, modifier = Modifier
-//                                    .padding(top = 8.dp)
-//                                    .fillMaxWidth()) {
-//                                    Text(
-//                                        text = "作者:"+item?.author,
-//                                        color = Color.Gray,
-//                                        fontSize = 12.sp,
-//                                        maxLines = 2,
-//                                        overflow = TextOverflow.Ellipsis
-//                                    )
-//                                    Text(
-//                                        text = item?.niceDate?:"",
-//                                        color = Color.Gray,
-//                                        fontSize = 12.sp,
-//                                        maxLines = 2,
-//                                        overflow = TextOverflow.Ellipsis
-//                                    )
-//                                }
-//                                Text(
-//                                    text = Html.fromHtml(item?.desc?:"").toString(),
-//                                    color = Color.Gray,
-//                                    fontSize = 15.sp,
-//                                    maxLines = 3,
-//                                    overflow = TextOverflow.Ellipsis,
-//                                    modifier = Modifier.padding(top = 5.dp)
-//                                )
-//                            }
-//                        }
-//                }
-//            }
-//        }
         PagingStateUtil().pagingStateUtil(
             pagingData = wenDaList!!,
             refreshState = refreshState,
@@ -102,6 +56,7 @@ fun WenDaPage(navCtrl: NavHostController) {
                             .background(Color.White)
                             .clickable {
                                 navCtrl.navigate(RouteName.WEBVIEW + "?url=${item?.link}&title=${item?.title}")
+                                wenDaViewModel.cacheHistory(item!!, mContext = mContext)
                             }) {
                             Column(
                                 Modifier

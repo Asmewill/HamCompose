@@ -10,12 +10,14 @@ import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -25,6 +27,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemsIndexed
+import com.example.owapp.HamApp.Companion.mContext
 import com.example.owapp.R
 import com.example.owapp.route.RouteName
 import com.example.owapp.ui.theme.C_Primary
@@ -32,12 +35,15 @@ import com.example.owapp.util.PagingStateUtil
 import com.example.owapp.viewmodel.SquareViewModel
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
+import com.mm.hamcompose.data.bean.Article
+
 
 /**
  * Created by Owen on 2023/5/19
  */
 @Composable
 fun SquarePage(navCtrl:NavHostController) {
+    val mContext = LocalContext.current
     val squareViewModel:SquareViewModel = viewModel() //viewModel()可以保证viewModel只实例化一次
     if(!squareViewModel.isInit){//isInit标量标识是为了防止getHomeList()获取到数据之后，通过MutableLive通知的时候，getSquareList()
         squareViewModel.isInit=true
@@ -45,6 +51,22 @@ fun SquarePage(navCtrl:NavHostController) {
     }
     val squareList=squareViewModel.squareLiveData.observeAsState().value?.collectAsLazyPagingItems()
     val refreshState= rememberSwipeRefreshState(isRefreshing = false)
+    var collectItem  by remember {
+        mutableStateOf<Article?>(null)
+    }
+    val collectType by remember {
+        squareViewModel.collectType
+    }
+    //收藏成功与否回调
+    if(collectType==1){
+        collectItem?.let {
+            it.collect=true
+        }
+    }else if(collectType==2){
+        collectItem?.let {
+            it.collect=false
+        }
+    }
     PagingStateUtil().pagingStateUtil(
         pagingData = squareList!!,
         refreshState =refreshState ,
@@ -66,6 +88,7 @@ fun SquarePage(navCtrl:NavHostController) {
                                     .background(color = Color.White)
                                     .clickable {
                                         navCtrl.navigate(RouteName.WEBVIEW + "?url=${item?.link}&title=${item?.title}")
+                                        squareViewModel.cacheHistory(article = item!!,mContext)
                                     }
                             ) {
                                 ConstraintLayout(modifier = Modifier
@@ -179,10 +202,27 @@ fun SquarePage(navCtrl:NavHostController) {
                                             .padding(start = 12.dp, end = 12.dp)
                                             .align(Alignment.Center))
                                     }
-                                    Icon(imageVector = Icons.Default.FavoriteBorder, tint = Color.Gray, contentDescription = "",
+                                    var imageVector=Icons.Default.FavoriteBorder
+                                    var tintColor=Color.Gray
+                                    item?.let {
+                                        if(item.collect){
+                                            imageVector=Icons.Default.Favorite
+                                            tintColor= C_Primary
+                                        }
+                                    }
+                                    Icon(imageVector = imageVector, tint =tintColor, contentDescription = "",
                                         modifier=Modifier.constrainAs(bottomIcon){
                                             end.linkTo(parent.end)
                                             bottom.linkTo(parent.bottom)
+                                        }.clickable {
+                                            item?.let {
+                                                collectItem=it
+                                                if(item.collect){
+                                                    squareViewModel.uncollectArticleById(item.id)
+                                                }else{
+                                                    squareViewModel.collectArticleById(item.id)
+                                                }
+                                            }
                                         })
                                 }
 

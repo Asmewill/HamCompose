@@ -2,6 +2,8 @@ package com.example.owapp.page
 
 import android.annotation.SuppressLint
 import android.content.res.ColorStateList
+import android.text.Html
+import android.text.TextUtils
 import android.view.ViewGroup
 import android.webkit.WebView
 import android.widget.FrameLayout
@@ -19,24 +21,24 @@ import androidx.navigation.NavHostController
 import com.blankj.utilcode.util.SizeUtils
 import com.example.owapp.util.HamToolBar1
 import com.example.owapp.R
+import com.mm.hamcompose.data.bean.WebData
 
 /**
  * Created by Owen on 2023/5/25
  */
 @SuppressLint("UseCompatLoadingForDrawables")
 @Composable
-fun WebViewPage(navCtrl:NavHostController,title:String,url:String) {
+fun WebViewPage(navCtrl:NavHostController,title:String="",url:String="",webData:WebData?=null) {
     var isLoadFinish  by remember { mutableStateOf(false)}
+    val titleStr= if(!TextUtils.isEmpty(title)) title else webData?.title?:""
+    val linkStr= if(!TextUtils.isEmpty(url)) url else webData?.url?:""
     var webViewCtrl:WebViewCtrl? by remember {
         mutableStateOf(null)
     }
-    Scaffold(
-        topBar = {
-            HamToolBar1(middleTitle =title, onBack = {
-                navCtrl.navigateUp()
-            })
-        }
-    ) {
+    Column {
+        HamToolBar1(middleTitle = Html.fromHtml(titleStr).toString(), onBack = {
+            navCtrl.navigateUp()
+        })
         AndroidView(factory = { content->
             FrameLayout(content).apply {
                 layoutParams = FrameLayout.LayoutParams(
@@ -60,14 +62,12 @@ fun WebViewPage(navCtrl:NavHostController,title:String,url:String) {
                 }
                 addView(webView)
                 addView(progressView)
-                webViewCtrl = WebViewCtrl(this, url, onWebCall = { isFinish ->
+                webViewCtrl = WebViewCtrl(this, linkStr, onWebCall = { isFinish ->
                     isLoadFinish = isFinish
                 })
                 webViewCtrl?.initSettings()
             }
         })
-
-
-
     }
+
 }

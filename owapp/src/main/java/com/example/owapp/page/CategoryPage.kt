@@ -25,20 +25,24 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 import com.google.accompanist.pager.rememberPagerState
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import kotlinx.coroutines.launch
 /**
  * Created by Owen on 2023/5/19
  */
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun CategoryPage(navCtrl:NavHostController){
+fun CategoryPage(navCtrl:NavHostController, indexPage:Int,onPageSelected:(Int)->Unit){
     val categoryViewModel=CategoryViewModel()
     val titleList by remember { categoryViewModel.titles}
     val scrope= rememberCoroutineScope()
+
+    
     Column() {
         val  pageState= rememberPagerState(
             pageCount = titleList.size,
-            initialPage = 0,
+            initialPage = indexPage,
             initialOffscreenLimit=titleList.size
         )
         //TabView 推荐  广场 问答
@@ -49,7 +53,6 @@ fun CategoryPage(navCtrl:NavHostController){
                 .background(color = C_Primary),
             verticalAlignment = Alignment.CenterVertically
         ) {
-
             titleList.forEachIndexed { index, tabTitle ->
                 Text(
                     text = tabTitle.text,
@@ -66,15 +69,18 @@ fun CategoryPage(navCtrl:NavHostController){
                 )
             }
             Spacer(modifier = Modifier.weight(1.0f))
-            Icon(imageVector = Icons.Default.Add, contentDescription = "", tint = Color.White,modifier=Modifier.padding(end = 10.dp).clickable {
-                navCtrl.navigate(RouteName.SHARE_ARTICLE)
-            })
+            Icon(imageVector = Icons.Default.Add, contentDescription = "", tint = Color.White,modifier= Modifier
+                .padding(end = 10.dp)
+                .clickable {
+                    navCtrl.navigate(RouteName.SHARE_ARTICLE)
+                })
         }
         HorizontalPager(state = pageState) {page->
+            onPageSelected(pageState.currentPage)
             when(page){
-                0-> StructureTreePage()
-                1-> NaviPage()
-                2-> WeChatPage()
+                0-> StructureTreePage(navCtrl = navCtrl)
+                1-> NaviPage(navCtrl = navCtrl)
+                2-> WeChatPage(navCtrl = navCtrl)
             }
         }
     }

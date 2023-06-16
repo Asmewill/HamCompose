@@ -1,7 +1,9 @@
 package com.mm.hamcompose.data.bean
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
 
 const val MY_USER_ID = -999
@@ -44,3 +46,8 @@ data class SignBean(
     val pointType:String
 )
 
+@Parcelize
+data class WebData(
+    var title: String,
+    var url: String
+): Parcelable

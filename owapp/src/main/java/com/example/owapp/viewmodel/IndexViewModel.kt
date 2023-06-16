@@ -1,5 +1,6 @@
 package com.example.owapp.viewmodel
 
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -37,6 +38,15 @@ class IndexViewModel:BaseViewModel() {
                               bannerLiveData.value?.clear()
                          }
                     }
+               }
+          }
+     }
+     //直接使用原始HttpResult数据
+     val  topListBean= mutableStateOf<HttpResult<MutableList<Article>>?>(null)
+     fun getTopArticleList(){
+          async {
+               HttpRepository.getTopArticles().collectLatest {
+                    topListBean.value=it
                }
           }
      }
