@@ -1,3 +1,6 @@
+# 项目构建必须使用corretto-11.0.22
+
+
 # WanAndroidCompose版本
 
 #### 介绍
