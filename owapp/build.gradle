@@ -5,11 +5,8 @@ plugins {
     id 'kotlin-kapt'
     id "kotlin-parcelize"//Parcelize
     id "androidx.navigation.safeargs.kotlin"
-    id("org.jetbrains.kotlin.plugin.compose") version "2.0.21" // Kotlin version
-
 }
 android {
-    namespace "com.example.owapp"
     compileSdk 32
     defaultConfig {
         applicationId "com.example.owapp"
@@ -106,7 +103,7 @@ dependencies {
     implementation "androidx.room:room-runtime:$roomVersion"
     implementation "androidx.room:room-ktx:$roomVersion"
      kapt   "androidx.room:room-compiler:$roomVersion"
-    implementation "androidx.room:room-paging:$roomVersion"
+    implementation "androidx.room:room-paging:$roomPagingVersion"
 
     //数据保存，用于cookie持久化
     implementation "androidx.datastore:datastore-preferences:$datastoreVersion"
