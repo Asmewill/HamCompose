@@ -3,12 +3,16 @@ plugins {
     id "com.android.application"
     id "kotlin-android"
     id "kotlin-kapt"
-    id "dagger.hilt.android.plugin"
+//    id "dagger.hilt.android.plugin"
     id "kotlin-parcelize"
     id "androidx.navigation.safeargs.kotlin"
+    id("org.jetbrains.kotlin.plugin.compose") version "2.0.21" // Kotlin version
+    id 'com.google.dagger.hilt.android'
+
 }
 
 android {
+    namespace="com.mm.hamcompose"
     compileSdk = androidCompileSdk
     buildToolsVersion = androidBuildToolsVersion
 
@@ -43,7 +47,7 @@ android {
     }
     kotlinOptions {
         jvmTarget = "1.8"
-        useIR = true
+       // useIR = true
     }
     buildFeatures {
         compose = true
@@ -108,7 +112,7 @@ dependencies {
     kaptTest "com.google.dagger:hilt-compiler:$hiltVersion"
     implementation "androidx.hilt:hilt-navigation-compose:$hiltComposeVersion"
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:$hiltComposeVersion"
-    kapt "androidx.hilt:hilt-compiler:$hiltCompilerVersion"
+    kapt "com.google.dagger:hilt-compiler:$hiltVersion"
 
     //http request
     implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
@@ -133,12 +137,13 @@ dependencies {
     //paging分页库
     implementation "androidx.paging:paging-runtime:$pagingVersion"
     testImplementation "androidx.paging:paging-common:$pagingVersion"
+
     implementation "androidx.paging:paging-compose:$pagingComposeVersion"
     //room数据库
     implementation "androidx.room:room-runtime:$roomVersion"
     implementation "androidx.room:room-ktx:$roomVersion"
     kapt "androidx.room:room-compiler:$roomVersion"
-    implementation "androidx.room:room-paging:$roomPagingVersion"
+    implementation "androidx.room:room-paging:$roomVersion"
     //页面导航
     implementation "androidx.navigation:navigation-compose:$navigationComposeVersion"
 

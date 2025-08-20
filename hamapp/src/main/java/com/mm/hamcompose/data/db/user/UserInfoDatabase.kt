@@ -7,7 +7,7 @@ import com.mm.hamcompose.data.bean.IntTypeConverter
 import com.mm.hamcompose.data.bean.UserInfo
 import com.mm.hamcompose.data.db.DbConst
 
-@Database(entities = [UserInfo::class], version = DbConst.dbVersion)
+@Database(entities = [UserInfo::class], version = DbConst.dbVersion, exportSchema = false)
 @TypeConverters(IntTypeConverter::class)
 abstract class UserInfoDatabase: RoomDatabase() {
     abstract fun userInfoDao(): UserInfoDao
