@@ -34,6 +34,7 @@ import com.mm.hamcompose.R
 import com.mm.hamcompose.data.bean.TabTitle
 import com.mm.hamcompose.theme.*
 import com.mm.hamcompose.ui.route.BottomNavRoute
+import com.mm.hamcompose.ui.route.BottomNavRouteNew
 
 /**
  * 普通标题栏头部
@@ -328,6 +329,42 @@ fun BottomNavBarView(navCtrl: NavHostController) {
     }
 }
 
+
+
+@Composable
+fun BottomNavBar(
+    navCtrl: NavHostController,
+    selectIndex:Int,
+    onItemSelect:(Int)->Unit={}
+) {
+    val items = listOf(
+        BottomNavRouteNew.Home,
+        BottomNavRouteNew.Category,
+        BottomNavRouteNew.Project,
+        BottomNavRouteNew.Mine
+    )
+    BottomNavigation(backgroundColor = Color.White) {
+        items.forEachIndexed{ tabIndex,item ->
+            val isSelected = selectIndex == tabIndex
+            BottomNavigationItem(
+                selected = isSelected, onClick = {
+                    onItemSelect(tabIndex)
+                },
+                icon = {
+                    Icon(
+                        painter = painterResource(id = item.mipId), contentDescription = "",
+                        modifier = Modifier.size(24.dp)
+                    )
+                },
+                label = {
+                    Text(text = stringResource(id = item.stringId))
+                },
+                selectedContentColor = MaterialTheme.colors.primary,
+                unselectedContentColor = Color.Black
+            )
+        }
+    }
+}
 @Preview
 @Composable
 fun EmptyView(

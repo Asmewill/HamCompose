@@ -38,18 +38,13 @@ import com.mm.hamcompose.ui.page.main.profile.sharer.SharerPage
 import com.mm.hamcompose.ui.page.main.profile.user.LoginPage
 import com.mm.hamcompose.ui.page.main.profile.user.RegisterPage
 import com.mm.hamcompose.ui.page.webview.WebViewPage
+import com.mm.hamcompose.ui.route.BottomNavRoute
 import com.mm.hamcompose.ui.route.RouteName
 import com.mm.hamcompose.ui.route.RouteUtils
 import com.mm.hamcompose.ui.widget.BottomNavBarView
 import com.mm.hamcompose.ui.widget.HamSnackBar
 
-private inline fun <reified T> jsonToObject(json: String?): T? {
-    return runCatching {
-        Gson().fromJson(json, T::class.java)
-    }.onFailure {
-        println("json parse ERROR = ${it.message}")
-    }.getOrNull()
-}
+
 
 @Composable
 fun HamScaffold() {

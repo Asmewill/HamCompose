@@ -4,6 +4,7 @@ import androidx.activity.OnBackPressedDispatcher
 import androidx.compose.runtime.*
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.mm.hamcompose.theme.HamTheme
+import com.mm.hamcompose.ui.page.base.AppNavHost
 import com.mm.hamcompose.ui.page.base.HamScaffold
 import com.mm.hamcompose.ui.page.splash.SplashPage
 
@@ -16,8 +17,9 @@ fun HomeEntry(backDispatcher: OnBackPressedDispatcher) {
         SplashPage { isSplash = false }//闪屏页
     } else {
        HamTheme {
-           ProvideWindowInsets() {
-               HamScaffold()
+           ProvideWindowInsets {
+             //  HamScaffold()
+               AppNavHost();
            }
        }//主界面
     }

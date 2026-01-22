@@ -37,3 +37,7 @@ Mvvm, Composable + viewModel + repository
 1. 添加动画 = WAIT
 2. 我的消息开发 = WAIT
 
+
+#### 环境说明
+1.Android Studio Giraffe | 2022.3.1 Patch 1
+2.JAVA 11

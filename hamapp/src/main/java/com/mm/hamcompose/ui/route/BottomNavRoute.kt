@@ -6,6 +6,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.mm.hamcompose.R
 
+
 sealed class BottomNavRoute(
     var routeName: String,
     @StringRes var stringId: Int,
@@ -16,6 +17,17 @@ sealed class BottomNavRoute(
     object Collection: BottomNavRoute(RouteName.COLLECTION, R.string.collection, Icons.Default.Favorite)
     object Profile: BottomNavRoute(RouteName.PROFILE, R.string.profile, Icons.Default.Person)
 }
+
+
+
+
+sealed  class BottomNavRouteNew(val routeName:String,val stringId:Int,val mipId:Int) {
+    object Home:BottomNavRouteNew(RouteName.HOME, R.string.home, R.mipmap.nav_home)
+    object Category:BottomNavRouteNew(RouteName.CATEGORY, R.string.category,R.mipmap.nav_category)
+    object Project:BottomNavRouteNew(RouteName.COLLECTION, R.string.collection,R.mipmap.nav_project)
+    object Mine:BottomNavRouteNew(RouteName.PROFILE, R.string.profile,R.mipmap.nav_mine)
+}
+
 
 //enum class BottomNavRoute(
 //    var routeName: String,

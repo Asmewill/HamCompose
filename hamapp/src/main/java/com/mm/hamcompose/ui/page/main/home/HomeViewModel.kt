@@ -25,9 +25,9 @@ class HomeViewModel @Inject constructor() : BaseViewModel<HomeThemeBean>() {
     val titles = mutableStateOf(
         mutableListOf(
             TabTitle(101, "推荐"),
-//            TabTitle(102, "广场"),
-//            TabTitle(103, "项目"),
-//            TabTitle(104, "问答")
+            TabTitle(102, "广场"),
+            TabTitle(103, "项目"),
+            TabTitle(104, "问答")
         )
     )
 
