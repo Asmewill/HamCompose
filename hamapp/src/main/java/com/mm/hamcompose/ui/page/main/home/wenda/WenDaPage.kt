@@ -39,6 +39,8 @@ fun WenDaPage(
     val swipeRefreshState = rememberSwipeRefreshState(refreshing)
     val listState = rememberLazyListState(currentPosition)
 
+   
+
     SwipeRefresh(
         state = swipeRefreshState,
         onRefresh = { viewModel.refresh() }

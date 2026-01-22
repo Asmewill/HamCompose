@@ -1,5 +1,6 @@
 package com.mm.hamcompose.ui.page.main
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -21,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -41,6 +43,7 @@ import com.mm.hamcompose.ui.route.BottomNavRouteNew
 import com.mm.hamcompose.ui.route.RouteName
 import com.mm.hamcompose.ui.route.RouteUtils.back
 import com.mm.hamcompose.ui.widget.*
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 /***
@@ -48,6 +51,7 @@ import kotlinx.coroutines.launch
  * 文章
  */
 
+@SuppressLint("CoroutineCreationDuringComposition")
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalPagerApi::class)
 @Composable
 fun MainPage(
@@ -64,6 +68,18 @@ fun MainPage(
 
     val homeIndex by  mainViewModel.homeIndex.collectAsState()
     val categoryIndex by  mainViewModel.categoryIndex.collectAsState()
+    //mainViewModel.currentPageIndex这个StateFlow<Int> 必须在协程中启动
+//    mainViewModel.viewModelScope.launch {
+//        mainViewModel.currentPageIndex.collect {value->
+//
+//        }
+//    }
+    //mainViewModel.myPageIndex这个MutableStateFlow<Int> 必须在协程中启动
+//     mainViewModel.viewModelScope.launch {
+//         mainViewModel.myPageIndex.collect {value->
+//
+//         }
+//     }
 
 
     LaunchedEffect(pageState.currentPage) {

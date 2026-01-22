@@ -29,8 +29,11 @@ class MainViewModel @Inject constructor(
     override fun start() {
 
     }
-
+     val myPageIndex = MutableStateFlow(0)
     // 当前页面索引
+    //MutableStateFlow和 StateFlow的关系类似于 MutableLiveData和 LiveData的关系：
+    //MutableStateFlow：可变的版本，你可以通过修改它的 .value属性来更新状态。
+   // StateFlow：只读的版本，你只能从中收集（读取）数据，而不能直接修改它。
     private val _currentPageIndex = MutableStateFlow(0)
     val currentPageIndex: StateFlow<Int> = _currentPageIndex.asStateFlow()
 
