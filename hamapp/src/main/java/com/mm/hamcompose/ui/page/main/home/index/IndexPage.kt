@@ -44,6 +44,13 @@ fun IndexPage(
     val swipeRefreshState = rememberSwipeRefreshState(refreshing)
     val listState = rememberLazyListState(initialFirstVisibleItemIndex = currentPosition)
     val coroutineScope = rememberCoroutineScope()
+//无需协程启动
+//    viewModel.pagingData.observe(this){ pageArticle->
+//
+//    }
+
+
+
     //收藏成功提示
     if (message.isNotEmpty()) {
         popupSnackBar(coroutineScope, scaffoldState, SNACK_INFO, message)

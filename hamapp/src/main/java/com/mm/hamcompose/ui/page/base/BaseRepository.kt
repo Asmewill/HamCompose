@@ -17,6 +17,7 @@ open class BaseRepository {
      //通过基于Flow数据流 ，得到最终的response
     fun <T> flowable(callAction: suspend ()-> BasicBean<T>): Flow<HttpResult<T>> {
         return flow {
+           // Kotlin 中的 try-catch确实是一个表达式，它可以将代码块中最后一行的值作为整个表达式的返回值
             val result =  try {
                 val response = callAction()
                 if (response.errorCode==0) {
